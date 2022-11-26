@@ -28,7 +28,7 @@ app.get("", (req, res) => {
 app.get("/help", (req, res) => {
   res.render("help", {
     title: "Help Page",
-    author: "Haïthem BEN AYOUB",
+    name: "Haïthem BEN AYOUB",
     site_title: "Weather App",
     message: "GET IN TOUCH WITH ME",
   });
@@ -37,7 +37,7 @@ app.get("/help", (req, res) => {
 app.get("/about", (req, res) => {
   res.render("about", {
     title: "About me",
-    author: "Haïthem BEN AYOUB",
+    name: "Haïthem BEN AYOUB",
     site_title: "Weather App",
   });
 });
@@ -46,6 +46,22 @@ app.get("/weather", (req, res) => {
   res.send({
     forecast: "",
     location: "",
+  });
+});
+
+app.get("/help/*", (req, res) => {
+  res.render("404", {
+    title: "404",
+    name: "Haïthem BEN AYOUB",
+    errorMessage: "Help article not found.",
+  });
+});
+
+app.get("*", (req, res) => {
+  res.render("404", {
+    title: "404",
+    name: "Haïthem BEN AYOUB",
+    errorMessage: "Page not found.",
   });
 });
 
