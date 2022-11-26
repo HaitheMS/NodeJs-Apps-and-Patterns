@@ -1,11 +1,6 @@
-"use-strict";
-console.log("Starting");
-
-setTimeout(() => {
-  console.log("2 Second");
-}, 2000);
-setTimeout(() => {
-  console.log("0 Second");
-}, 0);
-
-console.log("Stopping");
+const fetch = require("node-fetch");
+const response = await fetch(
+  "https://api.nasa.gov/planetary/apod?api_key=tnc6iRusjYqdwJbYIgLHfkEB5eqVmfhUGMXM2wHK"
+);
+const data = await response.json();
+console.log(data);
