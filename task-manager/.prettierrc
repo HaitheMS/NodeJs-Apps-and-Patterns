@@ -1,0 +1,6 @@
+{
+  "useTabs": false, // Indent lines with tabs instead of spaces.
+  "tabWidth": 2, // Set the tab width
+  "singleQuote": true, // Use single quotes when it is needed
+  "arrowParens": "avoid"
+}
