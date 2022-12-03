@@ -1,6 +1,7 @@
 const express = require("express");
 const Task = require("../models/task");
 const router = new express.Router();
+const bcrypt = require("bcryptjs");
 
 router.post("/tasks", async (req, res) => {
   const newTask = new Task(req.body);
@@ -34,7 +35,7 @@ router.get("/tasks/:id", async (req, res) => {
   }
 });
 
-// Patch Task by ID
+// Patch Task by ID ObjectId("6384c7e10b57ea57f60a12e3")
 router.patch("/tasks/:id", async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
@@ -53,10 +54,10 @@ router.patch("/tasks/:id", async (req, res) => {
     return res.status(400).send({ error: "Invalid updates!" });
   }
   try {
-    const taskUpdated = await Task.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const taskUpdated = await Task.findById(req.params.id);
+    updates.forEach((update) => (taskUpdated[update] = req.body[update]));
+    await taskUpdated.save();
+    // IN case of an unknown task from DB
     if (!taskUpdated) res.status(404).send();
     res.status(202).send(taskUpdated);
   } catch (e) {

@@ -1,9 +1,8 @@
 // Using Mongoose
 const mongoose = require("mongoose");
 const validator = require("validator");
-
-// Modeling User Data
-const User = mongoose.model("User", {
+const bcrypt = require("bcryptjs");
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     default: "Anonymous",
@@ -46,5 +45,33 @@ const User = mongoose.model("User", {
     },
   },
 });
+
+userSchema.statics.findByCredentials = async (email, password) => {
+  // Find user by email as the first step to check login credentials
+    const user = await User.findOne({ email });
+// If there is no user with this email address
+    if (!user)  throw new Error('Unable to login');
+    // Store checkup in a variable
+    const isMatch = await bcrypt.compare(password, user.password);
+// If there is no match, reject login
+    if (!isMatch) throw new Error('Unable to login');
+// else return user
+    return user
+};
+
+// Hash password before save , Before the event (validation)
+userSchema.pre("save", async function (next) {
+  const user = this;
+
+  if (user.isModified("password")) {
+    // If password added or modified hash the password
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+
+  next();
+});
+
+// Modeling User Data
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
